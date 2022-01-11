@@ -34,6 +34,18 @@ class HomeScreen extends StatelessWidget {
             child: ListView(children: [
               RekomendasiBuku(bookItems: bookItems),
               KoleksiHome(),
+              BookItem(
+                  title: "Menjalani Hari Hari",
+                  penulis: "Donny Cat",
+                  kategori: "Kucing Book"),
+              BookItem(
+                  title: "Menjalani Hari Hari",
+                  penulis: "Donny Cat",
+                  kategori: "Kucing Book"),
+              BookItem(
+                  title: "Menjalani Hari Hari",
+                  penulis: "Donny Cat",
+                  kategori: "Kucing Book"),
             ]),
           ),
         ],

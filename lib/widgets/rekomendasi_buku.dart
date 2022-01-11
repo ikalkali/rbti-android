@@ -58,18 +58,16 @@ class RekomendasiBuku extends StatelessWidget {
             width: double.infinity,
           ),
           Container(
-            height: 300,
-            width: double.infinity,
-            child: ListView.builder(
-              itemBuilder: (ctx, idx) {
-                return BookItem(
-                    title: bookItems[idx].title,
-                    penulis: bookItems[idx].penulis,
-                    kategori: bookItems[idx].kategori);
-              },
-              itemCount: bookItems.length,
-            ),
-          )
+              height: 300,
+              width: double.infinity,
+              child: Column(
+                children: bookItems
+                    .map((e) => BookItem(
+                        title: e.title,
+                        penulis: e.penulis,
+                        kategori: e.kategori))
+                    .toList(),
+              ))
         ]);
   }
 }

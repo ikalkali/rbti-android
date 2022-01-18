@@ -58,7 +58,7 @@ class RekomendasiBuku extends StatelessWidget {
             width: double.infinity,
           ),
           Container(
-              height: 300,
+              height: 400,
               width: double.infinity,
               child: Column(
                 children: bookItems

@@ -8,10 +8,26 @@ import 'package:rbti_android/widgets/coba.dart';
 import 'package:rbti_android/widgets/koleksi_home.dart';
 import "../widgets/rekomendasi_buku.dart";
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      Provider.of<Books>(context).fetchAndSetBooks().then((_) => null);
+      _isInit = false;
+      super.didChangeDependencies();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

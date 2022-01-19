@@ -20,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var _isInit = true;
+  var _filter = "buku";
 
   @override
   void didChangeDependencies() {
@@ -30,6 +31,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void setFilter(String filter) {
+    print("FILTER CALLED $filter");
+    if (_filter != filter) {
+      setState(() {
+        _filter = filter;
+      });
+    }
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
     final books = Provider.of<Books>(context, listen: false);
@@ -37,28 +48,33 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(),
       bottomNavigationBar: BottomNavbar(),
-      body: Stack(
-        children: [
-          ColoredBox(
-            color: Theme.of(context).colorScheme.secondary,
-            child: SizedBox(
-              width: double.infinity,
-              height: 200,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: ListView(children: [
-              RekomendasiBuku(bookItems: bookItems),
-              KoleksiHome(),
-              SingleChildScrollView(
-                child: Consumer<Books>(builder: (context, book, child) {
-                  return PagedBookListView(bookRepository: book);
-                }),
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            ColoredBox(
+              color: Theme.of(context).colorScheme.secondary,
+              child: SizedBox(
+                width: double.infinity,
+                height: 200,
               ),
-            ]),
-          ),
-        ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: ListView(primary: false, shrinkWrap: true, children: [
+                RekomendasiBuku(bookItems: bookItems),
+                KoleksiHome(
+                  filterFn: setFilter,
+                ),
+                Consumer<Books>(builder: (context, book, child) {
+                  return PagedBookListView(
+                    bookRepository: book,
+                    filter: _filter,
+                  );
+                }),
+              ]),
+            ),
+          ],
+        ),
       ),
     );
   }

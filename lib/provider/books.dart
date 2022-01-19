@@ -47,10 +47,12 @@ class Books with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Book>> fetchPaginatedBook(int limit, int offset) async {
+  Future<List<Book>> fetchPaginatedBook(int limit, int offset,
+      [String? filter = "buku"]) async {
+    print(filter);
     var url = "${APILink.apiLink}/api/buku/search";
-    final requestBody = json.encode(
-        {"query": "", "filter": "skripsi", "size": limit, "from": offset});
+    final requestBody = json
+        .encode({"query": "", "filter": filter, "size": limit, "from": offset});
     final response = await http.post(Uri.parse(url), body: requestBody);
     final List<Book> loadedBooks = [];
     final totalItemCount = json.decode(response.body)["count"] as int;

@@ -1,8 +1,12 @@
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
+import 'package:rbti_android/provider/books.dart';
 import 'package:rbti_android/screen/kategori_screen.dart';
 
 class KoleksiHome extends StatefulWidget {
-  const KoleksiHome({Key? key}) : super(key: key);
+  const KoleksiHome({Key? key, required this.filterFn}) : super(key: key);
+
+  final Function filterFn;
 
   @override
   _KoleksiHomeState createState() => _KoleksiHomeState();
@@ -10,11 +14,11 @@ class KoleksiHome extends StatefulWidget {
 
 class _KoleksiHomeState extends State<KoleksiHome> {
   final listChoices = <ItemChoice>[
-    ItemChoice(1, 'Buku'),
-    ItemChoice(2, 'Skripsi'),
-    ItemChoice(3, 'Laporan PKL'),
+    ItemChoice(1, 'Buku', "buku"),
+    ItemChoice(2, 'Skripsi', "skripsi"),
+    ItemChoice(3, 'Laporan PKL', "jurnal"),
   ];
-  var idSelected = 0;
+  var idSelected = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +58,7 @@ class _KoleksiHomeState extends State<KoleksiHome> {
                       selected: idSelected == e.id,
                       label: Text(e.label),
                       onSelected: (_) => setState(() {
+                        widget.filterFn(e.value);
                         idSelected = e.id;
                       }),
                     ))
@@ -69,6 +74,7 @@ class _KoleksiHomeState extends State<KoleksiHome> {
 class ItemChoice {
   final int id;
   final String label;
+  final String value;
 
-  ItemChoice(this.id, this.label);
+  ItemChoice(this.id, this.label, this.value);
 }

@@ -58,7 +58,6 @@ class RekomendasiBuku extends StatelessWidget {
             width: double.infinity,
           ),
           Container(
-              height: 400,
               width: double.infinity,
               child: Column(
                 children: bookItems
@@ -67,7 +66,10 @@ class RekomendasiBuku extends StatelessWidget {
                         penulis: e.penulis,
                         kategori: e.kategori))
                     .toList(),
-              ))
+              )),
+          SizedBox(
+            height: 20,
+          )
         ]);
   }
 }

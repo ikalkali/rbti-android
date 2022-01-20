@@ -1,12 +1,15 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
+import 'package:rbti_android/models/bookFilter.dart';
 import 'package:rbti_android/provider/books.dart';
 import 'package:rbti_android/screen/kategori_screen.dart';
 
 class KoleksiHome extends StatefulWidget {
-  const KoleksiHome({Key? key, required this.filterFn}) : super(key: key);
+  const KoleksiHome({Key? key, required this.filterFn, required this.filter})
+      : super(key: key);
 
   final Function filterFn;
+  final BookFilter filter;
 
   @override
   _KoleksiHomeState createState() => _KoleksiHomeState();
@@ -25,7 +28,6 @@ class _KoleksiHomeState extends State<KoleksiHome> {
     final TextStyle selectedText = TextStyle(
         fontFamily: "Raleway", color: Theme.of(context).colorScheme.primary);
     final TextStyle deselectedText = TextStyle(fontFamily: "Raleway");
-
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +57,7 @@ class _KoleksiHomeState extends State<KoleksiHome> {
           Wrap(
             children: listChoices
                 .map((e) => ChoiceChip(
-                      selected: idSelected == e.id,
+                      selected: widget.filter.jenis == e.value,
                       label: Text(e.label),
                       onSelected: (_) => setState(() {
                         widget.filterFn(e.value);

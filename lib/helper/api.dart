@@ -1,3 +1,3 @@
 class APILink {
-  static const apiLink = "http://192.168.1.10:8080";
+  static const apiLink = "http://550c-158-140-163-18.ngrok.io";
 }

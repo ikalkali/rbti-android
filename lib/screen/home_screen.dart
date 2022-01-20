@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
+import 'package:rbti_android/models/bookFilter.dart';
 import 'package:rbti_android/navbar/bottom_navbar.dart';
 import 'package:rbti_android/provider/book.dart';
 import 'package:rbti_android/provider/books.dart';
@@ -20,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var _isInit = true;
-  var _filter = "buku";
+  var _filter = BookFilter(jenis: "buku");
 
   @override
   void didChangeDependencies() {
@@ -32,10 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void setFilter(String filter) {
-    print("FILTER CALLED $filter");
-    if (_filter != filter) {
+    if (_filter.jenis != filter) {
       setState(() {
-        _filter = filter;
+        _filter = BookFilter(jenis: filter);
       });
     }
     return;
@@ -64,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 RekomendasiBuku(bookItems: bookItems),
                 KoleksiHome(
                   filterFn: setFilter,
+                  filter: _filter,
                 ),
                 Consumer<Books>(builder: (context, book, child) {
                   return PagedBookListView(

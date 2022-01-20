@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:rbti_android/models/bookFilter.dart';
 import 'package:rbti_android/provider/book.dart';
 import 'package:rbti_android/provider/books.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -10,7 +11,7 @@ class PagedBookListView extends StatefulWidget {
       : super(key: key);
 
   final Books bookRepository;
-  final String filter;
+  final BookFilter filter;
 
   @override
   _PagedBookListViewState createState() => _PagedBookListViewState();
@@ -64,7 +65,9 @@ class _PagedBookListViewState extends State<PagedBookListView> {
 
   @override
   void didUpdateWidget(PagedBookListView oldWidget) {
-    if (oldWidget.filter != widget.filter) {
+    print(oldWidget.filter.jenis);
+    print(widget.filter.jenis);
+    if (oldWidget.filter.jenis != widget.filter.jenis) {
       _pagingController.refresh();
     }
     super.didUpdateWidget(oldWidget);

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import "package:flutter/material.dart";
+import 'package:rbti_android/models/bookFilter.dart';
 import './book.dart';
 import 'package:http/http.dart' as http;
 import "../helper/api.dart";
@@ -28,7 +29,7 @@ class Books with ChangeNotifier {
   Future<void> fetchAndSetBooks(int limit, int offset) async {
     var url = "${APILink.apiLink}/api/buku/search";
     final requestBody = json.encode(
-        {"query": "", "filter": "skripsi", "size": limit, "from": 10 + offset});
+        {"query": "", "jenis": "skripsi", "size": limit, "from": 10 + offset});
     final response = await http.post(Uri.parse(url), body: requestBody);
     print(response);
     final List<Book> loadedBooks = [];
@@ -47,14 +48,21 @@ class Books with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Book>> fetchPaginatedBook(int limit, int offset,
-      [String? filter = "buku"]) async {
+  Future<List<Book>> fetchPaginatedBook(
+      int limit, int offset, BookFilter filter) async {
     print(filter);
     var url = "${APILink.apiLink}/api/buku/search";
-    final requestBody = json
-        .encode({"query": "", "filter": filter, "size": limit, "from": offset});
+
+    final requestBody = json.encode({
+      "query": "",
+      "jenis": filter.jenis,
+      "id_kategori": filter.idKategori,
+      "size": limit,
+      "from": offset
+    });
     final response = await http.post(Uri.parse(url), body: requestBody);
     final List<Book> loadedBooks = [];
+    print(response.body);
     final totalItemCount = json.decode(response.body)["count"] as int;
     final extractedData = json.decode(response.body)["data"] as List<dynamic>;
     extractedData.forEach((book) {

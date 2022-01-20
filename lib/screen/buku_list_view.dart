@@ -40,11 +40,13 @@ class _BukuListViewScreenState extends State<BukuListViewScreen> {
                           filter: widget.filter,
                         );
                       }).then((val) {
-                    var newFilter = BookFilter(
-                        jenis: val, idKategori: widget.filter.idKategori);
-                    setState(() {
-                      _filter = newFilter;
-                    });
+                    if (val != null) {
+                      var newFilter = BookFilter(
+                          jenis: val, idKategori: widget.filter.idKategori);
+                      setState(() {
+                        _filter = newFilter;
+                      });
+                    }
                   });
                 },
               ),

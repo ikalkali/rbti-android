@@ -33,31 +33,36 @@ class _KategoriScreenState extends State<KategoriScreen> {
         appBar: AppBar(
           title: Text("Kategori"),
         ),
-        body: Container(
-          padding: EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Semua\nkategori buku",
-                style: Theme.of(context).textTheme.headline1,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SearchBar("Filter kategori..."),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                  height: 470,
-                  child: ListView.builder(
-                      itemCount: kategoriItem.length,
-                      itemBuilder: (context, idx) {
-                        return KategoriItem(
-                            kategoriItem[idx].kategori, kategoriItem[idx].id);
-                      }))
-            ],
+        body: RefreshIndicator(
+          onRefresh: () => Future.sync(() {
+            setState(() {
+              _isInit = true;
+              super.didChangeDependencies();
+            });
+          }),
+          child: Container(
+            padding: EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Semua\nkategori buku",
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                // SearchBar("Filter kategori..."),
+                Container(
+                    height: 550,
+                    child: ListView.builder(
+                        itemCount: kategoriItem.length,
+                        itemBuilder: (context, idx) {
+                          return KategoriItem(
+                              kategoriItem[idx].kategori, kategoriItem[idx].id);
+                        }))
+              ],
+            ),
           ),
         ));
   }

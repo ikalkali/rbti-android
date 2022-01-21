@@ -15,7 +15,11 @@ class KategoriList with ChangeNotifier {
   List<Kategori> _items = [];
 
   List<Kategori> get allKategori {
-    return [..._items];
+    var newKategori = [..._items];
+    newKategori.sort((a, b) {
+      return a.kategori.toLowerCase().compareTo(b.kategori.toLowerCase());
+    });
+    return newKategori;
   }
 
   Future<void> fetchAndSetKategori() async {

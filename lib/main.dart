@@ -5,11 +5,9 @@ import 'package:rbti_android/provider/kategori.dart';
 import 'package:rbti_android/screen/buku_detail.dart';
 import 'package:rbti_android/screen/buku_list_view.dart';
 import 'package:rbti_android/screen/kategori_screen.dart';
-import './provider/book.dart';
+import 'package:rbti_android/screen/main_screen.dart';
 import './provider/books.dart';
 import './screen/home_screen.dart';
-import './widgets/book_item.dart';
-import './navbar/bottom_navbar.dart';
 
 void main() {
   runApp(HomePage());
@@ -27,13 +25,11 @@ class HomePage extends StatelessWidget {
           onGenerateRoute: (settings) {
             if (settings.name == BukuListViewScreen.routeName) {
               final args = settings.arguments as BookFilter;
-              print("SETTINGS ${args.kategori}");
-              print("SETTINGS ${args.idKategori}");
-              print("SETTINGS ${args.jenis}");
 
               return MaterialPageRoute(builder: (context) {
                 return BukuListViewScreen(
                     filter: BookFilter(
+                        query: args.query,
                         idKategori: args.idKategori,
                         kategori: args.kategori,
                         jenis: args.jenis ?? ""));

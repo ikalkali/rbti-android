@@ -47,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final bookItems = books.itemsLimited;
     return Scaffold(
       appBar: AppBar(),
-      bottomNavigationBar: BottomNavbar(),
       body: SingleChildScrollView(
         child: Stack(
           children: [

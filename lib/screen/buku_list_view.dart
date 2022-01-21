@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import 'package:rbti_android/models/bookFilter.dart';
 import 'package:rbti_android/widgets/list/search_book_listview.dart';
 import 'package:rbti_android/widgets/modal/filter_modal.dart';
+import 'package:rbti_android/widgets/search_bar.dart';
 
 class BukuListViewScreen extends StatefulWidget {
   const BukuListViewScreen({Key? key, required BookFilter this.filter})
@@ -24,9 +25,26 @@ class _BukuListViewScreenState extends State<BukuListViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String titleText;
+    if (widget.filter.kategori != null) {
+      titleText = "Koleksi ${widget.filter.kategori}";
+    } else {
+      titleText = "Hasil pencarian";
+    }
+
+    void submitSearchHandler(String value) {
+      var newFilter = BookFilter(query: value);
+      setState(() {
+        _filter = newFilter;
+      });
+    }
+
     return Scaffold(
         appBar: AppBar(
-          title: Text("Koleksi ${widget.filter.kategori}"),
+          title: Container(
+            height: 40,
+            child: SearchBar("Cari judul, penulis...", submitSearchHandler),
+          ),
           actions: [
             Padding(
               padding: EdgeInsets.all(8),
@@ -37,7 +55,7 @@ class _BukuListViewScreenState extends State<BukuListViewScreen> {
                       context: context,
                       builder: (context) {
                         return FilterModal(
-                          filter: widget.filter,
+                          filter: _filter,
                         );
                       }).then((val) {
                     if (val != null) {

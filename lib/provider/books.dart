@@ -54,7 +54,7 @@ class Books with ChangeNotifier {
     var url = "${APILink.apiLink}/api/buku/search";
 
     final requestBody = json.encode({
-      "query": "",
+      "query": filter.query,
       "jenis": filter.jenis,
       "id_kategori": filter.idKategori,
       "size": limit,

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:rbti_android/models/bookFilter.dart';
 import 'package:rbti_android/widgets/koleksi_home.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class FilterModal extends StatefulWidget {
   const FilterModal({Key? key, required BookFilter this.filter})
@@ -19,7 +20,16 @@ class _FilterModalState extends State<FilterModal> {
     ItemChoice(3, 'Laporan PKL', "jurnal"),
   ];
   var idSelected = 1;
-  var selectedValue = "buku";
+  var selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      selectedValue = widget.filter.jenis as String;
+      print("SELECTED VALUE : $selectedValue");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +44,7 @@ class _FilterModalState extends State<FilterModal> {
         Wrap(
           children: listChoices
               .map((e) => ChoiceChip(
-                    selected: idSelected == e.id,
+                    selected: selectedValue == e.value,
                     label: Text(e.label),
                     onSelected: (_) => setState(() {
                       selectedValue = e.value;
@@ -43,6 +53,9 @@ class _FilterModalState extends State<FilterModal> {
                   ))
               .toList(),
           spacing: 8,
+        ),
+        SizedBox(
+          height: 15,
         ),
         SizedBox(
           height: 20,

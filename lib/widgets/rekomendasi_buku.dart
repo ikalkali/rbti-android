@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import 'package:rbti_android/models/bookFilter.dart';
+import 'package:rbti_android/screen/buku_list_view.dart';
 import '../widgets/book_item.dart';
 import '../provider/book.dart';
 
@@ -37,6 +39,10 @@ class RekomendasiBuku extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.grey[200]),
             child: TextField(
+              onSubmitted: (String value) {
+                Navigator.of(context).pushNamed(BukuListViewScreen.routeName,
+                    arguments: BookFilter(query: value));
+              },
               decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
                   labelText: "Search...",

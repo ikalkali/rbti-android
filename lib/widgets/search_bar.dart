@@ -2,8 +2,9 @@ import "package:flutter/material.dart";
 
 class SearchBar extends StatelessWidget {
   final String label;
+  final Function submitHandler;
 
-  SearchBar(this.label);
+  SearchBar(this.label, this.submitHandler);
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +13,12 @@ class SearchBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(10), color: Colors.grey[200]),
       child: TextField(
         autofocus: false,
+        onSubmitted: (String value) {
+          submitHandler(value);
+        },
         decoration: InputDecoration(
             prefixIcon: Icon(Icons.search),
-            labelText: label,
+            hintText: label,
             border: InputBorder.none),
       ),
     );

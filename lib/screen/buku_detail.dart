@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
+import 'package:rbti_android/provider/books.dart';
 import 'package:rbti_android/widgets/tabel_detail_buku.dart';
 
 class BukuDetail extends StatelessWidget {
@@ -7,6 +9,9 @@ class BukuDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as DetailBuku;
+    print("ARGS DI SCREEN ${args.tipe}");
+
+    final bookRepo = Provider.of<Books>(context, listen: false);
 
     return Scaffold(
         appBar: AppBar(
@@ -29,50 +34,59 @@ class BukuDetail extends StatelessWidget {
                 RowDetailBuku("Penerbit", "Doni Subandono", true),
                 RowDetailBuku("Tahun", "2009", true),
                 RowDetailBuku("Kategori", args.kategori, true),
-                RowDetailBuku("Nomor Rak", "12A", false),
+                RowDetailBuku("Nomor Rak", "12A", true),
+                RowDetailBuku("ID Judul", args.id, false),
                 SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  child: TextButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (ctx) {
-                            return AlertDialog(
-                              content: Wrap(
-                                children: [
-                                  Column(children: [
-                                    Icon(
-                                      Icons.check_circle,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      size: 60,
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      "Berhasil menambahkan ${args.title} ke keranjang pinjaman",
-                                      style: TextStyle(
-                                          fontFamily: "Raleway",
-                                          color: Colors.black,
-                                          fontSize: 14),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ])
-                                ],
-                              ),
-                            );
-                          });
-                    },
-                    child: Text(
-                      "PINJAM",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: ButtonStyle(
-                        // minimumSize: ,
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue)),
-                  ),
-                )
+                args.tipe.toLowerCase() == "buku"
+                    ? Container(
+                        width: double.infinity,
+                        child: TextButton(
+                          onPressed: () {
+                            bookRepo.addCartItem("185060707111004", [
+                              int.parse(args.id)
+                            ]).then((value) => {
+                                  print("VALUE ADD TO CART $value"),
+                                  showDialog(
+                                      context: context,
+                                      builder: (ctx) {
+                                        return AlertDialog(
+                                          content: Wrap(
+                                            children: [
+                                              Column(children: [
+                                                Icon(
+                                                  Icons.check_circle,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                  size: 60,
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                  "Berhasil menambahkan ${args.title} ke keranjang pinjaman",
+                                                  style: TextStyle(
+                                                      fontFamily: "Raleway",
+                                                      color: Colors.black,
+                                                      fontSize: 14),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ])
+                                            ],
+                                          ),
+                                        );
+                                      })
+                                });
+                          },
+                          child: Text(
+                            "PINJAM",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: ButtonStyle(
+                              // minimumSize: ,
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.blue)),
+                        ),
+                      )
+                    : Text(""),
               ],
             ),
           ),
@@ -85,6 +99,7 @@ class DetailBuku {
   final String title;
   final String kategori;
   final String penulis;
+  final String tipe;
 
-  DetailBuku(this.id, this.title, this.kategori, this.penulis);
+  DetailBuku(this.id, this.title, this.kategori, this.penulis, this.tipe);
 }

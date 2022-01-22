@@ -4,6 +4,7 @@ import 'package:rbti_android/models/bookFilter.dart';
 import 'package:rbti_android/navbar/bottom_navbar.dart';
 import 'package:rbti_android/provider/book.dart';
 import 'package:rbti_android/provider/books.dart';
+import 'package:rbti_android/screen/cart_screen.dart';
 import 'package:rbti_android/widgets/book_item.dart';
 import 'package:rbti_android/widgets/coba.dart';
 import 'package:rbti_android/widgets/koleksi_home.dart';
@@ -46,7 +47,17 @@ class _HomeScreenState extends State<HomeScreen> {
     final books = Provider.of<Books>(context, listen: false);
     final bookItems = books.itemsLimited;
     return Scaffold(
-      appBar: AppBar(),
+      bottomNavigationBar: BottomNavbar(
+        index: 0,
+      ),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.shopping_cart),
+          onPressed: () {
+            Navigator.of(context).pushNamed(CartScreen.routeName);
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Stack(
           children: [

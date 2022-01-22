@@ -83,6 +83,8 @@ class _SearchBookListViewState extends State<SearchBookListView> {
           pagingController: _pagingController,
           builderDelegate: PagedChildBuilderDelegate<Book>(
               itemBuilder: (context, book, index) => BookItem(
+                  id: book.id.toString(),
+                  tipe: book.tipe,
                   title: book.title,
                   penulis: book.penulis,
                   kategori: book.kategori),

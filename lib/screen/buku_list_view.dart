@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:rbti_android/models/bookFilter.dart';
+import 'package:rbti_android/navbar/bottom_navbar.dart';
 import 'package:rbti_android/widgets/list/search_book_listview.dart';
 import 'package:rbti_android/widgets/modal/filter_modal.dart';
 import 'package:rbti_android/widgets/search_bar.dart';
@@ -40,6 +41,9 @@ class _BukuListViewScreenState extends State<BukuListViewScreen> {
     }
 
     return Scaffold(
+        bottomNavigationBar: BottomNavbar(
+          index: 1,
+        ),
         appBar: AppBar(
           title: Container(
             height: 40,

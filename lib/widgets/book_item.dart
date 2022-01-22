@@ -6,13 +6,19 @@ class BookItem extends StatelessWidget {
   final String title;
   final String penulis;
   final String kategori;
+  final String tipe;
+  final String id;
 
   BookItem(
-      {required this.title, required this.penulis, required this.kategori});
+      {required this.title,
+      required this.penulis,
+      required this.kategori,
+      required this.tipe,
+      required this.id});
 
   @override
   Widget build(BuildContext context) {
-    var argsDetail = DetailBuku("1", title, kategori, penulis);
+    var argsDetail = DetailBuku(id, title, kategori, penulis, tipe);
 
     return GestureDetector(
       onTap: () {

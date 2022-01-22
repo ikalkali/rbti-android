@@ -8,6 +8,7 @@ import "../helper/api.dart";
 
 class Books with ChangeNotifier {
   List<Book> _items = [];
+  List<Book> _cartItems = [];
 
   int _paginateItemCount = 0;
 
@@ -24,6 +25,10 @@ class Books with ChangeNotifier {
 
   int get currentPaginateCount {
     return _paginateItemCount;
+  }
+
+  List<Book> get cartItems {
+    return [..._cartItems];
   }
 
   Future<void> fetchAndSetBooks(int limit, int offset) async {
@@ -50,7 +55,6 @@ class Books with ChangeNotifier {
 
   Future<List<Book>> fetchPaginatedBook(
       int limit, int offset, BookFilter filter) async {
-    print(filter);
     var url = "${APILink.apiLink}/api/buku/search";
 
     final requestBody = json.encode({
@@ -62,7 +66,6 @@ class Books with ChangeNotifier {
     });
     final response = await http.post(Uri.parse(url), body: requestBody);
     final List<Book> loadedBooks = [];
-    print(response.body);
     final totalItemCount = json.decode(response.body)["count"] as int;
     final extractedData = json.decode(response.body)["data"] as List<dynamic>;
     extractedData.forEach((book) {
@@ -76,9 +79,69 @@ class Books with ChangeNotifier {
     });
 
     _paginateItemCount = totalItemCount;
-    print(_paginateItemCount);
     notifyListeners();
 
     return loadedBooks;
+  }
+
+  Future<void> fetchCartItems(String nim) async {
+    var url = "${APILink.apiLink}/api/cart";
+    var requestBody = json.encode({"nim": nim});
+
+    final response = await http.post(Uri.parse(url), body: requestBody);
+    final extractedData =
+        json.decode(response.body)["data"]["judul"] as List<dynamic>;
+    final List<Book> loadedBooks = [];
+
+    extractedData.forEach((book) {
+      loadedBooks.add(Book(
+          id: book["id"],
+          title: book["judul"],
+          kategori: "not given",
+          idKategori: book["id_kategori"],
+          penulis: book["penulis"],
+          tipe: "Buku"));
+    });
+
+    _cartItems = loadedBooks;
+    notifyListeners();
+  }
+
+  Future<String> addCartItem(String nim, List<int> id) async {
+    var url = "${APILink.apiLink}/api/cart/edit";
+    var requestBody = json.encode({
+      "nim": nim,
+      "id_judul": [...id],
+      "action": "add"
+    });
+
+    final response = await http.post(Uri.parse(url), body: requestBody);
+    if (response.statusCode > 400) {
+      return "${json.decode(response.body)['errors']}";
+    }
+
+    return "success";
+  }
+
+  Future<String> addCartToPeminjaman(List<int> idJudul, String nim) async {
+    var url = "${APILink.apiLink}/api/peminjaman";
+    var requestBody = json.encode({
+      "nim": nim,
+      "id_judul": [...idJudul],
+      "source": "app"
+    });
+
+    var oldCartItems = [..._cartItems];
+    final response = await http.post(Uri.parse(url), body: requestBody);
+    if (response.statusCode > 400) {
+      return "${json.decode(response.body)['errors']}";
+    }
+
+    final extractedIdPeminjaman = json.decode(response.body)["data"] as String;
+
+    _cartItems = [];
+    notifyListeners();
+
+    return extractedIdPeminjaman;
   }
 }

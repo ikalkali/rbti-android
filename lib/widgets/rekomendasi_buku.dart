@@ -68,6 +68,8 @@ class RekomendasiBuku extends StatelessWidget {
               child: Column(
                 children: bookItems
                     .map((e) => BookItem(
+                        id: e.id.toString(),
+                        tipe: e.tipe,
                         title: e.title,
                         penulis: e.penulis,
                         kategori: e.kategori))

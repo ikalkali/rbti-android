@@ -40,6 +40,20 @@ class _BukuListViewScreenState extends State<BukuListViewScreen> {
       });
     }
 
+    bool checkNewFilter(BookFilter prevFilter, BookFilter newFilter) {
+      if (prevFilter.jenis != newFilter.jenis) {
+        return true;
+      }
+      if (prevFilter.jenisPinjam != newFilter.jenisPinjam) {
+        return true;
+      }
+      if (prevFilter.tersedia != newFilter.tersedia) {
+        return true;
+      }
+
+      return false;
+    }
+
     return Scaffold(
         bottomNavigationBar: BottomNavbar(
           index: 1,
@@ -62,9 +76,13 @@ class _BukuListViewScreenState extends State<BukuListViewScreen> {
                           filter: _filter,
                         );
                       }).then((val) {
-                    if (val != null) {
+                    var valInferred = val as BookFilter;
+                    if (checkNewFilter(_filter, valInferred)) {
                       var newFilter = BookFilter(
-                          jenis: val, idKategori: widget.filter.idKategori);
+                          jenis: valInferred.jenis,
+                          jenisPinjam: valInferred.jenisPinjam,
+                          tersedia: valInferred.tersedia,
+                          idKategori: widget.filter.idKategori);
                       setState(() {
                         _filter = newFilter;
                       });

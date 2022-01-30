@@ -51,12 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
         index: 0,
       ),
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.shopping_cart),
-          onPressed: () {
-            Navigator.of(context).pushNamed(CartScreen.routeName);
-          },
-        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.of(context).pushNamed(CartScreen.routeName);
+            },
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Stack(

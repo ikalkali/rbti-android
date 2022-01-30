@@ -31,6 +31,7 @@ class PeminjamanList extends ChangeNotifier {
             title: buku["judul"],
             id: buku["id_buku"],
             kategori: "null",
+            tahun: buku["tahun"],
             idKategori: 1,
             penulis: "null",
             tipe: "Buku"));
@@ -55,11 +56,13 @@ class Peminjaman {
   final List<Book> bukuDipinjam;
   final int denda;
   final String detailDenda;
+  bool isExpanded;
 
   Peminjaman(
       {required this.id,
       required this.tanggalPeminjaman,
       required this.bukuDipinjam,
       required this.denda,
-      required this.detailDenda});
+      required this.detailDenda,
+      this.isExpanded = false});
 }

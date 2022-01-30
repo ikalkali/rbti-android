@@ -87,6 +87,7 @@ class _SearchBookListViewState extends State<SearchBookListView> {
                   tipe: book.tipe,
                   title: book.title,
                   penulis: book.penulis,
+                  isAvailable: book.isAvailable,
                   kategori: book.kategori),
               firstPageErrorIndicatorBuilder: (context) => AlertDialog(
                     title: Text("Tidak ada buku untuk kategori ini!"),

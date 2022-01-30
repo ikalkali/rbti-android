@@ -15,6 +15,7 @@ class FilterModal extends StatefulWidget {
 
 class _FilterModalState extends State<FilterModal> {
   final listChoices = <ItemChoice>[
+    ItemChoice(4, 'Semua Buku', "semua"),
     ItemChoice(1, 'Buku', "buku"),
     ItemChoice(2, 'Skripsi', "skripsi"),
     ItemChoice(3, 'Laporan PKL', "jurnal"),
@@ -22,13 +23,68 @@ class _FilterModalState extends State<FilterModal> {
   var idSelected = 1;
   var selectedValue;
 
+  final listJenis = <ItemChoice>[
+    ItemChoice(0, "Semua", ""),
+    ItemChoice(1, "Bisa Dipinjam", ""),
+    ItemChoice(2, "Tidak Bisa Dipinjam", ""),
+  ];
+  var idSelectedJenis = 0;
+  var availableOnly = false;
+
   @override
   void initState() {
     super.initState();
     setState(() {
-      selectedValue = widget.filter.jenis as String;
+      selectedValue = widget.filter.jenis ?? "semua" as String;
+      idSelectedJenis = widget.filter.jenisPinjam ?? 0;
+      if (idSelectedJenis == 1) {
+        availableOnly = widget.filter.tersedia ?? false;
+      }
       print("SELECTED VALUE : $selectedValue");
     });
+  }
+
+  Widget showRow() {
+    if (idSelectedJenis == 1) {
+      return Row(
+        children: [
+          Text("Perlihatkan buku dengan stok tersedia saja"),
+          Checkbox(
+              value: availableOnly,
+              onChanged: (val) {
+                setState(() {
+                  availableOnly = val as bool;
+                });
+              })
+        ],
+      );
+    }
+
+    return SizedBox.shrink();
+  }
+
+  List<Widget> showJenisPinjam() {
+    if (selectedValue == "buku") {
+      return [
+        Text(
+          "Jenis",
+          style: Theme.of(context).textTheme.headline4,
+        ),
+        Wrap(
+          children: listJenis
+              .map((e) => ChoiceChip(
+                    selected: idSelectedJenis == e.id,
+                    label: Text(e.label),
+                    onSelected: (_) => setState(() {
+                      idSelectedJenis = e.id;
+                    }),
+                  ))
+              .toList(),
+          spacing: 8,
+        )
+      ];
+    }
+    return [SizedBox.shrink()];
   }
 
   @override
@@ -38,7 +94,7 @@ class _FilterModalState extends State<FilterModal> {
       padding: const EdgeInsets.all(12.0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-          "Jenis",
+          "Tipe",
           style: Theme.of(context).textTheme.headline4,
         ),
         Wrap(
@@ -57,6 +113,8 @@ class _FilterModalState extends State<FilterModal> {
         SizedBox(
           height: 15,
         ),
+        ...showJenisPinjam(),
+        showRow(),
         SizedBox(
           height: 20,
         ),
@@ -66,7 +124,12 @@ class _FilterModalState extends State<FilterModal> {
               style: TextButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary),
               onPressed: () {
-                Navigator.pop(context, selectedValue);
+                Navigator.pop(
+                    context,
+                    BookFilter(
+                        jenis: selectedValue,
+                        jenisPinjam: idSelectedJenis,
+                        tersedia: availableOnly));
               },
               child: Text(
                 "APPLY FILTER",

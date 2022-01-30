@@ -16,6 +16,8 @@ class Book with ChangeNotifier {
   final int? jumlahTotal;
   final int? jumlahTersedia;
   final String? nim;
+  final int? tahun;
+  final bool? isAvailable;
 
   Book(
       {required this.id,
@@ -28,5 +30,7 @@ class Book with ChangeNotifier {
       this.jenis,
       this.jumlahTotal,
       this.jumlahTersedia,
-      this.nim});
+      this.nim,
+      this.tahun,
+      this.isAvailable});
 }

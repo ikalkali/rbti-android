@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:rbti_android/navbar/bottom_navbar.dart';
 import 'package:rbti_android/provider/peminjaman.dart';
+import 'package:rbti_android/widgets/book_peminjaman_item.dart';
 import 'package:rbti_android/widgets/peminjaman_item.dart';
 
 class PeminjamanScreen extends StatefulWidget {
@@ -52,21 +53,18 @@ class _PeminjamanScreenState extends State<PeminjamanScreen> {
                 color: Colors.black54,
               ),
               Container(
-                height: 500,
-                child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      return PeminjamanItem(
-                        peminjaman: listPeminjaman[index],
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        thickness: 0.75,
-                        color: Colors.black54,
-                      );
-                    },
-                    itemCount: listPeminjaman.length),
-              )
+                  height: 500,
+                  child: SingleChildScrollView(
+                    child: ExpansionPanelList(
+                      expansionCallback: (int index, bool isExpanded) {
+                        setState(() {
+                          listPeminjaman[index].isExpanded =
+                              !listPeminjaman[index].isExpanded;
+                        });
+                      },
+                      children: buildPeminjaman(listPeminjaman),
+                    ),
+                  ))
             ],
           ),
         ),
@@ -74,3 +72,38 @@ class _PeminjamanScreenState extends State<PeminjamanScreen> {
     );
   }
 }
+
+List<ExpansionPanel> buildPeminjaman(List<Peminjaman> listPeminjaman) {
+  return listPeminjaman.map<ExpansionPanel>((Peminjaman peminjaman) {
+    return ExpansionPanel(
+        headerBuilder: (BuildContext context, bool isExpanded) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PeminjamanItem(peminjaman: peminjaman),
+          );
+        },
+        body: PeminjamanItemExpansion(
+            idPeminjaman: peminjaman.id,
+            bookPeminjaman: peminjaman.bukuDipinjam
+                .map<BookPeminjaman>((item) => BookPeminjaman(
+                    id: item.id,
+                    judul: item.title,
+                    tahun: item.tahun.toString()))
+                .toList()),
+        isExpanded: peminjaman.isExpanded);
+  }).toList();
+}
+
+// ListView.separated(
+//                     itemBuilder: (context, index) {
+//                       return PeminjamanItem(
+//                         peminjaman: listPeminjaman[index],
+//                       );
+//                     },
+//                     separatorBuilder: (context, index) {
+//                       return Divider(
+//                         thickness: 0.75,
+//                         color: Colors.black54,
+//                       );
+//                     },
+//                     itemCount: listPeminjaman.length),

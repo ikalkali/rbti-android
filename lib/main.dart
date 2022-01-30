@@ -25,6 +25,7 @@ class HomePage extends StatelessWidget {
         ChangeNotifierProvider.value(value: PeminjamanList())
       ],
       child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           onGenerateRoute: (settings) {
             if (settings.name == BukuListViewScreen.routeName) {
               final args = settings.arguments as BookFilter;

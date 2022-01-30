@@ -37,15 +37,11 @@ class _PagedBookListViewState extends State<PagedBookListView> {
     // TODO: Implement the function's body.
     final int pageSize = 20;
     try {
-      print("pageKey : $pageKey");
       final newPage = await widget.bookRepository.fetchPaginatedBook(
           pageSize, (pageKey - 1) * pageSize, widget.filter);
-      print("DARI FETCH : ${newPage[0].id}");
       final prevFetchedItems = _pagingController.itemList?.length ?? 0;
-      print("prevFetched : $prevFetchedItems");
       final bool isLastPage = prevFetchedItems + pageSize > 20;
       if (isLastPage) {
-        print("LAST PAGE!");
         _pagingController.appendLastPage(newPage);
       } else {
         _pagingController.appendPage(newPage, pageKey + 1);

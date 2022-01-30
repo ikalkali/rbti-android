@@ -30,6 +30,16 @@ class DetailPeminjamanScreen extends StatelessWidget {
                   .copyWith(color: Colors.black),
             ),
             SizedBox(
+              height: 10,
+            ),
+            Text(
+              "ID Peminjaman ${args.idPeminjaman.toString()}",
+              style: Theme.of(context)
+                  .textTheme
+                  .headline1!
+                  .copyWith(color: Colors.black, fontWeight: FontWeight.normal),
+            ),
+            SizedBox(
               height: 200,
             ),
             BarcodeWidget(

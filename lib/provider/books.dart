@@ -12,6 +12,9 @@ class Books with ChangeNotifier {
   List<Book> _cartItems = [];
   bool _isAvailable = false;
 
+  final String nimLocal;
+  Books(this.nimLocal, this._items);
+
   int _paginateItemCount = 0;
 
   List<Book> get items {
@@ -38,6 +41,7 @@ class Books with ChangeNotifier {
   }
 
   Future<void> fetchAndSetBooks(int limit, int offset) async {
+    print("fetchAndSetBooks CALLED");
     var url = "${APILink.apiLink}/api/buku/search";
     final requestBody = json.encode(
         {"query": "", "jenis": "skripsi", "size": limit, "from": 10 + offset});
@@ -109,7 +113,7 @@ class Books with ChangeNotifier {
 
   Future<void> fetchCartItems(String nim) async {
     var url = "${APILink.apiLink}/api/cart";
-    var requestBody = json.encode({"nim": nim});
+    var requestBody = json.encode({"nim": nimLocal});
 
     final response = await http.post(Uri.parse(url), body: requestBody);
     final extractedData = json.decode(response.body)["data"]["judul"];
@@ -141,7 +145,7 @@ class Books with ChangeNotifier {
   Future<String> addCartItem(String nim, List<int> id) async {
     var url = "${APILink.apiLink}/api/cart/edit";
     var requestBody = json.encode({
-      "nim": nim,
+      "nim": nimLocal,
       "id_judul": [...id],
       "action": "add"
     });
@@ -157,7 +161,7 @@ class Books with ChangeNotifier {
   Future<String> removeCartItem(String nim, int id) async {
     var url = "${APILink.apiLink}/api/cart/edit";
     var requestBody = json.encode({
-      "nim": nim,
+      "nim": nimLocal,
       "id_judul": [id],
       "action": "remove"
     });
@@ -183,13 +187,13 @@ class Books with ChangeNotifier {
     });
 
     var requestBody = json.encode({
-      "nim": nim,
+      "nim": nimLocal,
       "id_judul": [...availableIdJudul],
       "source": "app"
     });
 
     var requestCart = json.encode({
-      "nim": nim,
+      "nim": nimLocal,
       "id_judul": [...availableIdJudul],
       "action": "remove"
     });

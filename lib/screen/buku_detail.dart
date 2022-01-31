@@ -12,8 +12,9 @@ class BukuDetail extends StatelessWidget {
     print("ARGS DI SCREEN ${args.tipe}");
 
     final bookRepo = Provider.of<Books>(context, listen: false);
+
     Widget buttonAddToCart() {
-      if (args.isAvailable as bool) {
+      if (args.isAvailable == true) {
         return Container(
           width: double.infinity,
           child: TextButton(

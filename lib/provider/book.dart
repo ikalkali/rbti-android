@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import "package:flutter/foundation.dart";
 
-class Book with ChangeNotifier {
+class Book {
   final int id;
   final String title;
   final String kategori;

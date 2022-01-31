@@ -25,24 +25,16 @@ class _BottomNavbarState extends State<BottomNavbar> {
           if (index != widget.index) {
             switch (index) {
               case 0:
-                Navigator.of(context).pushReplacement(
-                    new MaterialPageRoute(builder: (BuildContext context) {
-                  return HomePage();
-                }));
+                Navigator.of(context).pushReplacementNamed("/");
                 break;
               case 1:
-                Navigator.of(context).pushReplacement(
-                    new MaterialPageRoute(builder: (BuildContext context) {
-                  return BukuListViewScreen(
-                    filter: BookFilter(),
-                  );
-                }));
+                Navigator.of(context).pushReplacementNamed(
+                    BukuListViewScreen.routeName,
+                    arguments: BookFilter());
                 break;
               case 2:
-                Navigator.of(context).pushReplacement(
-                    new MaterialPageRoute(builder: (BuildContext context) {
-                  return PeminjamanScreen();
-                }));
+                Navigator.of(context)
+                    .pushReplacementNamed(PeminjamanScreen.routeName);
             }
           }
         },

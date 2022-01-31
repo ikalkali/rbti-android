@@ -80,6 +80,7 @@ class _PagedBookListViewState extends State<PagedBookListView> {
             itemBuilder: (context, book, index) => BookItem(
                 id: book.id.toString(),
                 tipe: book.tipe,
+                isAvailable: book.isAvailable,
                 title: book.title,
                 penulis: book.penulis,
                 kategori: book.kategori),

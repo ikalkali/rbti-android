@@ -2,9 +2,12 @@ import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:rbti_android/models/bookFilter.dart';
 import 'package:rbti_android/navbar/bottom_navbar.dart';
+import 'package:rbti_android/provider/auth.dart';
 import 'package:rbti_android/provider/book.dart';
 import 'package:rbti_android/provider/books.dart';
+import 'package:rbti_android/screen/auth_screen.dart';
 import 'package:rbti_android/screen/cart_screen.dart';
+import 'package:rbti_android/screen/user_screen.dart';
 import 'package:rbti_android/widgets/book_item.dart';
 import 'package:rbti_android/widgets/coba.dart';
 import 'package:rbti_android/widgets/koleksi_home.dart';
@@ -27,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      Provider.of<Books>(context).fetchAndSetBooks(3, 0).then((_) => null);
+      Provider.of<Books>(context, listen: false)
+          .fetchAndSetBooks(3, 0)
+          .then((_) => null);
       _isInit = false;
       super.didChangeDependencies();
     }
@@ -44,7 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final books = Provider.of<Books>(context, listen: false);
+    final isAuth = Provider.of<Auth>(context).isAuth;
+
+    final books = Provider.of<Books>(context);
     final bookItems = books.itemsLimited;
     return Scaffold(
       bottomNavigationBar: BottomNavbar(
@@ -57,7 +64,15 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               Navigator.of(context).pushNamed(CartScreen.routeName);
             },
-          )
+          ),
+          IconButton(
+            icon: Icon(Icons.verified_user),
+            onPressed: () {
+              isAuth
+                  ? Navigator.of(context).pushNamed(UserScreen.routeName)
+                  : Navigator.of(context).pushNamed(AuthScreen.routeName);
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(

@@ -8,6 +8,8 @@ import 'package:rbti_android/widgets/peminjaman_item.dart';
 class PeminjamanScreen extends StatefulWidget {
   const PeminjamanScreen({Key? key}) : super(key: key);
 
+  static const routeName = "/peminjaman";
+
   @override
   State<PeminjamanScreen> createState() => _PeminjamanScreenState();
 }

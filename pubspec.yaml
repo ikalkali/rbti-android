@@ -40,6 +40,8 @@ dependencies:
   barcode: ^2.2.0
   barcode_widget: ^2.0.2
   intl: ^0.17.0
+  shared_preferences: ^2.0.12
+  jwt_decode: ^0.3.1
 
 dev_dependencies:
   flutter_test:

@@ -6,6 +6,9 @@ import 'package:rbti_android/provider/book.dart';
 import 'package:http/http.dart' as http;
 
 class PeminjamanList extends ChangeNotifier {
+  final String nimLocal;
+  PeminjamanList(this.nimLocal);
+
   List<Peminjaman> _peminjaman = [];
 
   List<Peminjaman> get listPeminjaman {
@@ -14,7 +17,7 @@ class PeminjamanList extends ChangeNotifier {
 
   Future<void> fetchAndSetPeminjaman(String nim) async {
     var url = "${APILink.apiLink}/api/peminjaman/nim";
-    var requestBody = json.encode({"nim": nim});
+    var requestBody = json.encode({"nim": nimLocal});
 
     final response = await http.post(Uri.parse(url), body: requestBody);
     final extractedData =

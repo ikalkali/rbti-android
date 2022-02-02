@@ -61,8 +61,6 @@ class _PagedBookListViewState extends State<PagedBookListView> {
 
   @override
   void didUpdateWidget(PagedBookListView oldWidget) {
-    print(oldWidget.filter.jenis);
-    print(widget.filter.jenis);
     if (oldWidget.filter.jenis != widget.filter.jenis) {
       _pagingController.refresh();
     }

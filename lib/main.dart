@@ -11,6 +11,7 @@ import 'package:rbti_android/screen/cart_screen.dart';
 import 'package:rbti_android/screen/detail_peminjaman_screen.dart';
 import 'package:rbti_android/screen/kategori_screen.dart';
 import 'package:rbti_android/screen/peminjaman_screen.dart';
+import 'package:rbti_android/screen/splash_screen.dart';
 import 'package:rbti_android/screen/user_screen.dart';
 import './provider/books.dart';
 import './screen/home_screen.dart';
@@ -90,7 +91,11 @@ class HomePage extends StatelessWidget {
                 ? HomeScreen()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
-                    builder: (ctx, authResultSnapshop) => HomeScreen()),
+                    builder: (ctx, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? SplashScreen()
+                            : HomeScreen()),
             routes: {
               AuthScreen.routeName: (ctx) => AuthScreen(),
               PeminjamanScreen.routeName: (ctx) => PeminjamanScreen(),

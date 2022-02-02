@@ -1,66 +1,96 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
+import 'package:rbti_android/provider/auth.dart';
 import 'package:rbti_android/provider/books.dart';
+import 'package:rbti_android/screen/auth_screen.dart';
 import 'package:rbti_android/widgets/tabel_detail_buku.dart';
 
-class BukuDetail extends StatelessWidget {
+class BukuDetail extends StatefulWidget {
   static const routeName = "/buku-detail";
 
   @override
+  State<BukuDetail> createState() => _BukuDetailState();
+}
+
+class _BukuDetailState extends State<BukuDetail> {
+  @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as DetailBuku;
-    print("ARGS DI SCREEN ${args.tipe}");
 
     final bookRepo = Provider.of<Books>(context, listen: false);
+    final isAuth = Provider.of<Auth>(context).isAuth;
+    var _isLoading = false;
 
     Widget buttonAddToCart() {
       if (args.isAvailable == true) {
-        return Container(
-          width: double.infinity,
-          child: TextButton(
-            onPressed: () {
-              bookRepo.addCartItem("185060707111004", [
-                int.parse(args.id)
-              ]).then((value) => {
-                    print("VALUE ADD TO CART $value"),
-                    showDialog(
-                        context: context,
-                        builder: (ctx) {
-                          return AlertDialog(
-                            content: Wrap(
-                              children: [
-                                Column(children: [
-                                  Icon(
-                                    Icons.check_circle,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    size: 60,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    "Berhasil menambahkan ${args.title} ke keranjang pinjaman",
-                                    style: TextStyle(
-                                        fontFamily: "Raleway",
-                                        color: Colors.black,
-                                        fontSize: 14),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ])
-                              ],
-                            ),
-                          );
-                        })
-                  });
-            },
-            child: Text(
-              "PINJAM",
-              style: TextStyle(color: Colors.white),
+        if (isAuth) {
+          return Container(
+            width: double.infinity,
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  _isLoading = true;
+                });
+                bookRepo.addCartItem("185060707111004", [
+                  int.parse(args.id)
+                ]).then((value) => {
+                      setState(() {
+                        _isLoading = false;
+                      }),
+                      showDialog(
+                          context: context,
+                          builder: (ctx) {
+                            return AlertDialog(
+                              content: Wrap(
+                                children: [
+                                  Column(children: [
+                                    Icon(
+                                      Icons.check_circle,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      size: 60,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      "Berhasil menambahkan ${args.title} ke keranjang pinjaman",
+                                      style: TextStyle(
+                                          fontFamily: "Raleway",
+                                          color: Colors.black,
+                                          fontSize: 14),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ])
+                                ],
+                              ),
+                            );
+                          })
+                    });
+              },
+              child: Text(
+                "PINJAM",
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ButtonStyle(
+                  // minimumSize: ,
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue)),
             ),
-            style: ButtonStyle(
-                // minimumSize: ,
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
-          ),
-        );
+          );
+        } else {
+          return Container(
+            width: double.infinity,
+            child: TextButton(
+                style: TextButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AuthScreen.routeName);
+                },
+                child: Text(
+                  "LOGIN UNTUK PINJAM BUKU",
+                  style: TextStyle(color: Colors.white),
+                )),
+          );
+        }
       }
       return Container(
           width: double.infinity,

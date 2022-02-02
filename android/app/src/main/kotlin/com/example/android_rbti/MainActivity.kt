@@ -1,4 +1,4 @@
-package com.example.android_rbti
+package com.ikalkali.android_rbti
 
 import io.flutter.embedding.android.FlutterActivity
 

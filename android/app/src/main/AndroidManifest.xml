@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android_rbti">
+    package="com.ikalkali.android_rbti">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="android_rbti"
+        android:label="RBTI UB"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

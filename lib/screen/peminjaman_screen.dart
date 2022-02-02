@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:rbti_android/navbar/bottom_navbar.dart';
+import 'package:rbti_android/provider/auth.dart';
 import 'package:rbti_android/provider/peminjaman.dart';
+import 'package:rbti_android/screen/auth_screen.dart';
 import 'package:rbti_android/widgets/book_peminjaman_item.dart';
 import 'package:rbti_android/widgets/peminjaman_item.dart';
 
@@ -20,8 +22,13 @@ class _PeminjamanScreenState extends State<PeminjamanScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      Provider.of<PeminjamanList>(context)
-          .fetchAndSetPeminjaman("185060707111004");
+      try {
+        Provider.of<PeminjamanList>(context)
+            .fetchAndSetPeminjaman("185060707111004");
+      } catch (err) {
+        print(err);
+      }
+
       _isInit = false;
     }
     super.didChangeDependencies();
@@ -30,6 +37,8 @@ class _PeminjamanScreenState extends State<PeminjamanScreen> {
   @override
   Widget build(BuildContext context) {
     final listPeminjaman = Provider.of<PeminjamanList>(context).listPeminjaman;
+    final isAuth = Provider.of<Auth>(context).isAuth;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Peminjaman"),
@@ -54,19 +63,40 @@ class _PeminjamanScreenState extends State<PeminjamanScreen> {
                 thickness: 0.75,
                 color: Colors.black54,
               ),
-              Container(
-                  height: 500,
-                  child: SingleChildScrollView(
-                    child: ExpansionPanelList(
-                      expansionCallback: (int index, bool isExpanded) {
-                        setState(() {
-                          listPeminjaman[index].isExpanded =
-                              !listPeminjaman[index].isExpanded;
-                        });
+              if (listPeminjaman.length > 0)
+                Container(
+                    height: 500,
+                    child: SingleChildScrollView(
+                      child: ExpansionPanelList(
+                        expansionCallback: (int index, bool isExpanded) {
+                          setState(() {
+                            listPeminjaman[index].isExpanded =
+                                !listPeminjaman[index].isExpanded;
+                          });
+                        },
+                        children: buildPeminjaman(listPeminjaman),
+                      ),
+                    ))
+              else if (!isAuth)
+                Container(
+                  width: double.infinity,
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(AuthScreen.routeName);
                       },
-                      children: buildPeminjaman(listPeminjaman),
-                    ),
-                  ))
+                      child: Text(
+                        "LOGIN UNTUK MELIHAT PEMINJAMAN",
+                        style: TextStyle(color: Colors.white),
+                      )),
+                )
+              else
+                Text(
+                  "Tidak ada peminjaman aktif",
+                  style: Theme.of(context).textTheme.headline4,
+                )
             ],
           ),
         ),

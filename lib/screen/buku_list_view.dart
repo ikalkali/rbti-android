@@ -18,6 +18,7 @@ class BukuListViewScreen extends StatefulWidget {
 
 class _BukuListViewScreenState extends State<BukuListViewScreen> {
   BookFilter _filter = BookFilter();
+
   @override
   void didChangeDependencies() {
     _filter = widget.filter;

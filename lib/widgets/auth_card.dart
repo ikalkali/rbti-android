@@ -39,6 +39,21 @@ class _AuthCardState extends State<AuthCard> {
           _isLoading = false;
         });
         Navigator.popUntil(context, ModalRoute.withName('/'));
+      } else {
+        setState(() {
+          _isLoading = true;
+        });
+        await Provider.of<Auth>(context, listen: false).signup(User(
+            nim: _authData['nim'] as String,
+            nama: _authData['nama'] as String,
+            nomorTelp: _authData['no_telp'] as String,
+            email: _authData['email'] as String,
+            password: _authData['password'] as String));
+
+        _showInfoDialog();
+        setState(() {
+          _isLoading = false;
+        });
       }
     } catch (err) {
       setState(() {
@@ -66,6 +81,24 @@ class _AuthCardState extends State<AuthCard> {
     );
   }
 
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Signup berhasil!'),
+        content: Text("Akun berhasil dibuat, silakan login"),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   List<Widget> signupForm() {
     if (_authMode == AuthMode.Signup) {
       return [
@@ -79,6 +112,17 @@ class _AuthCardState extends State<AuthCard> {
           },
           onSaved: (value) {
             _authData['nim'] = value!;
+          },
+        ),
+        TextFormField(
+          decoration: InputDecoration(label: Text("Nama")),
+          validator: (value) {
+            if (value!.isEmpty || value.length < 5) {
+              return 'Nama tidak boleh kosong!';
+            }
+          },
+          onSaved: (value) {
+            _authData['nama'] = value!;
           },
         ),
         TextFormField(

@@ -19,37 +19,40 @@ class PeminjamanList extends ChangeNotifier {
     var url = "${APILink.apiLink}/api/peminjaman/nim";
     var requestBody = json.encode({"nim": nimLocal});
 
-    final response = await http.post(Uri.parse(url), body: requestBody);
-    final extractedData =
-        json.decode(response.body)["peminjaman"] as List<dynamic>;
-    final List<Peminjaman> loadedData = [];
+    try {
+      final response = await http.post(Uri.parse(url), body: requestBody);
+      final extractedData =
+          json.decode(response.body)["peminjaman"] as List<dynamic>;
+      final List<Peminjaman> loadedData = [];
 
-    extractedData.forEach((peminjaman) {
-      DateTime parsedDate =
-          DateTime.parse(peminjaman["tanggal_peminjaman"].toString());
-      List<Book> loadedBook = [];
-      var extractedBook = peminjaman["buku_dipinjam"] as List<dynamic>;
-      extractedBook.forEach((buku) {
-        loadedBook.add(Book(
-            title: buku["judul"],
-            id: buku["id_buku"],
-            kategori: "null",
-            tahun: buku["tahun"],
-            idKategori: 1,
-            penulis: "null",
-            tipe: "Buku"));
+      extractedData.forEach((peminjaman) {
+        DateTime parsedDate =
+            DateTime.parse(peminjaman["tanggal_peminjaman"].toString());
+        List<Book> loadedBook = [];
+        var extractedBook = peminjaman["buku_dipinjam"] as List<dynamic>;
+        extractedBook.forEach((buku) {
+          loadedBook.add(Book(
+              title: buku["judul"],
+              id: buku["id_buku"],
+              kategori: "null",
+              tahun: buku["tahun"],
+              idKategori: 1,
+              penulis: "null",
+              tipe: "Buku"));
+        });
+
+        loadedData.add(Peminjaman(
+            id: peminjaman["id_peminjaman"],
+            tanggalPeminjaman: parsedDate,
+            bukuDipinjam: loadedBook,
+            denda: peminjaman["denda"],
+            detailDenda: peminjaman["detail_denda"]));
       });
-
-      loadedData.add(Peminjaman(
-          id: peminjaman["id_peminjaman"],
-          tanggalPeminjaman: parsedDate,
-          bukuDipinjam: loadedBook,
-          denda: peminjaman["denda"],
-          detailDenda: peminjaman["detail_denda"]));
-    });
-
-    _peminjaman = loadedData;
-    notifyListeners();
+      _peminjaman = loadedData;
+      notifyListeners();
+    } catch (err) {
+      throw (err);
+    }
   }
 }
 

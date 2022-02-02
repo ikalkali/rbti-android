@@ -1,3 +1,3 @@
 class APILink {
-  static const apiLink = "http://10.0.2.2:8080";
+  static const apiLink = "https://api.ikal.app";
 }

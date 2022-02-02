@@ -33,7 +33,8 @@ class Auth with ChangeNotifier {
             "nim": user.nim,
             "email": user.email,
             "password": user.password,
-            "nomor_telp": user.nomorTelp
+            "nomor_telp": user.nomorTelp,
+            "nama": user.nama,
           }));
 
       final responseData = json.decode(response.body);
@@ -47,7 +48,7 @@ class Auth with ChangeNotifier {
 
   Future<void> getDataUser() async {
     final url = APILink.apiLink + "/api/mahasiswa?nim=" + _nim!;
-    print("URL ${url}");
+
     try {
       final resp = await http.get(Uri.parse(url));
       final respData = json.decode(resp.body)["data"] as Map<String, dynamic>;
@@ -59,8 +60,6 @@ class Auth with ChangeNotifier {
         nim: respData["nim"],
       );
 
-      // print("DATA USER ${user}");
-
       _user = user;
     } catch (err) {
       throw err;
@@ -70,27 +69,29 @@ class Auth with ChangeNotifier {
   Future<bool> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
+      print("RETURN FALSE");
       return false;
     }
     final extractedUserData =
-        json.decode(prefs.getString('userData')!) as Map<String, Object>;
+        json.decode(prefs.getString('userData')!) as Map<String, dynamic>;
     final expiryDate = DateTime.parse(extractedUserData['expire'] as String);
 
-    if (expiryDate.isBefore(DateTime.now())) {
-      return false;
-    }
+    print(extractedUserData);
 
     _token = extractedUserData['token'] as String;
     _nim = extractedUserData['nim'] as String;
     _expiryDate = expiryDate;
+
+    getDataUser();
     notifyListeners();
     return true;
   }
 
   Future<void> logout() async {
-    _token = null;
-    _nim = null;
+    _token = "";
+    _nim = "";
     _expiryDate = null;
+    _user = null;
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
@@ -123,13 +124,14 @@ class Auth with ChangeNotifier {
       // decode token to get nim
 
       final prefs = await SharedPreferences.getInstance();
-      print("NIM ${payload['nim']}");
+
       final userData = json.encode({
         'token': _token,
         'nim': payload["nim"],
         'expire': _expiryDate!.toIso8601String()
       });
       prefs.setString('userData', userData);
+      final prefsContent = prefs.getString('userData');
     } catch (err) {
       throw err;
     }

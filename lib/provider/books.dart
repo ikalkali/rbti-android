@@ -41,12 +41,11 @@ class Books with ChangeNotifier {
   }
 
   Future<void> fetchAndSetBooks(int limit, int offset) async {
-    print("fetchAndSetBooks CALLED");
     var url = "${APILink.apiLink}/api/buku/search";
     final requestBody = json.encode(
         {"query": "", "jenis": "skripsi", "size": limit, "from": 10 + offset});
     final response = await http.post(Uri.parse(url), body: requestBody);
-    print(response);
+
     final List<Book> loadedBooks = [];
     final extractedData = json.decode(response.body)["data"] as List<dynamic>;
     extractedData.forEach((book) {
@@ -83,11 +82,10 @@ class Books with ChangeNotifier {
       "jenis_pinjam": filter.jenisPinjam
     };
     if (filter.idKategori != null) {
-      requestBody["id_kategori"] = filter.idKategori;
+      requestBody["id_kategori"] = [filter.idKategori];
     }
     final reqBodyEncode = json.encode(requestBody);
 
-    print(requestBody);
     final response = await http.post(Uri.parse(url), body: reqBodyEncode);
     final List<Book> loadedBooks = [];
     final totalItemCount = json.decode(response.body)["count"] as int;

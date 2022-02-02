@@ -40,7 +40,6 @@ class _FilterModalState extends State<FilterModal> {
       if (idSelectedJenis == 1) {
         availableOnly = widget.filter.tersedia ?? false;
       }
-      print("SELECTED VALUE : $selectedValue");
     });
   }
 

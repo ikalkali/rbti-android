@@ -13,16 +13,25 @@ class KategoriScreen extends StatefulWidget {
 
 class _KategoriScreenState extends State<KategoriScreen> {
   var _isInit = true;
+  var _isLoading = false;
 
   @override
   void didChangeDependencies() {
+    setState(() {
+      _isLoading = true;
+    });
+
     if (_isInit) {
       Provider.of<KategoriList>(context)
           .fetchAndSetKategori()
           .then((_) => null);
       _isInit = false;
-      super.didChangeDependencies();
     }
+
+    setState(() {
+      _isLoading = false;
+    });
+    super.didChangeDependencies();
   }
 
   @override
@@ -53,14 +62,19 @@ class _KategoriScreenState extends State<KategoriScreen> {
                   height: 10,
                 ),
                 // SearchBar("Filter kategori..."),
-                Container(
-                    height: 550,
-                    child: ListView.builder(
-                        itemCount: kategoriItem.length,
-                        itemBuilder: (context, idx) {
-                          return KategoriItem(
-                              kategoriItem[idx].kategori, kategoriItem[idx].id);
-                        }))
+                if (_isLoading)
+                  Container(
+                      height: 500,
+                      child: Center(child: CircularProgressIndicator()))
+                else
+                  Container(
+                      height: 550,
+                      child: ListView.builder(
+                          itemCount: kategoriItem.length,
+                          itemBuilder: (context, idx) {
+                            return KategoriItem(kategoriItem[idx].kategori,
+                                kategoriItem[idx].id);
+                          }))
               ],
             ),
           ),

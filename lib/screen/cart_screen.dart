@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
+import 'package:rbti_android/provider/auth.dart';
 import 'package:rbti_android/provider/books.dart';
+import 'package:rbti_android/screen/auth_screen.dart';
 import 'package:rbti_android/screen/detail_peminjaman_screen.dart';
 import 'package:rbti_android/widgets/cart_item.dart';
 
@@ -15,17 +17,23 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   var _isInit = true;
+  var _isLoading = false;
 
   @override
   void didChangeDependencies() {
-    var args = ModalRoute.of(context)!.settings.arguments;
+    setState(() {
+      _isLoading = true;
+    });
     if (_isInit) {
       Provider.of<Books>(context)
           .fetchCartItems("185060707111004")
           .then((_) => null);
       _isInit = false;
-      super.didChangeDependencies();
     }
+    setState(() {
+      _isLoading = false;
+    });
+    super.didChangeDependencies();
   }
 
   @override
@@ -33,26 +41,60 @@ class _CartScreenState extends State<CartScreen> {
     final cartRepo = Provider.of<Books>(context);
     final cartItems = cartRepo.cartItems;
     final cartItemAvaibility = cartRepo.cartItemAvailable;
+    final isAuth = Provider.of<Auth>(context).isAuth;
     Widget errorMsg;
 
     if (cartItems.length == 0) {
-      errorMsg = Text(
-        "Tidak ada item pada cart",
-        style: Theme.of(context).textTheme.headline4,
-      );
+      if (!isAuth) {
+        errorMsg = Container(
+          width: double.infinity,
+          child: TextButton(
+              style: TextButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AuthScreen.routeName);
+              },
+              child: Text(
+                "LOGIN UNTUK MELIHAT CART",
+                style: TextStyle(color: Colors.white),
+              )),
+        );
+      } else {
+        errorMsg = Text(
+          "Tidak ada item pada cart",
+          style: Theme.of(context).textTheme.headline4,
+        );
+      }
     }
 
     Widget renderList() {
       if (cartItems.length == 0) {
-        errorMsg = Container(
-          height: 300,
-          child: Center(
-            child: Text(
-              "Tidak ada item pada cart",
-              style: Theme.of(context).textTheme.headline4,
+        if (!isAuth) {
+          errorMsg = Container(
+            width: double.infinity,
+            child: TextButton(
+                style: TextButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AuthScreen.routeName);
+                },
+                child: Text(
+                  "LOGIN UNTUK MELIHAT CART",
+                  style: TextStyle(color: Colors.white),
+                )),
+          );
+        } else {
+          errorMsg = Container(
+            height: 300,
+            child: Center(
+              child: Text(
+                "Tidak ada item pada cart",
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
-          ),
-        );
+          );
+        }
+
         return errorMsg;
       }
       return Container(
@@ -91,6 +133,9 @@ class _CartScreenState extends State<CartScreen> {
               onPressed: !cartItemAvaibility
                   ? null
                   : () {
+                      setState(() {
+                        _isLoading = true;
+                      });
                       List<CartDetailPeminjaman> cartDetailPeminjaman = [];
                       cartItems.forEach((item) {
                         cartDetailPeminjaman.add(CartDetailPeminjaman(
@@ -104,7 +149,11 @@ class _CartScreenState extends State<CartScreen> {
                               .pushReplacementNamed(
                                   DetailPeminjamanScreen.routeName,
                                   arguments: ArgsDetailPeminjaman(value)))
-                          .catchError(() {});
+                          .catchError(() {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      });
                     },
               style: TextButton.styleFrom(
                   backgroundColor: cartItemAvaibility
@@ -122,7 +171,9 @@ class _CartScreenState extends State<CartScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Keranjang"),
+      ),
       body: Container(
           child: Padding(
         padding: const EdgeInsets.all(12.0),

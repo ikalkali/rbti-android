@@ -25,13 +25,18 @@ class PeminjamanItemExpansion extends StatelessWidget {
               color: Colors.black54,
             ),
             Container(
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: bookPeminjaman.map<Widget>((item) {
-                  return Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text(item.judul)],
-                    ),
+                  return Column(
+                    children: [
+                      Container(
+                        child: Text(item.judul),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      )
+                    ],
                   );
                 }).toList(),
               ),

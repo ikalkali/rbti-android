@@ -41,20 +41,16 @@ class _SearchBookListViewState extends State<SearchBookListView> {
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    print("ARGS ${widget.filter.kategori}");
     final books = Provider.of<Books>(context, listen: false);
     final int pageSize = 20;
     try {
-      print("pageKey : $pageKey");
       final newPage = await books.fetchPaginatedBook(
           pageSize, (pageKey - 1) * pageSize, widget.filter);
 
       final prevFetchedItems = _pagingController.itemList?.length ?? 0;
       final totalPaginateCount = books.currentPaginateCount;
-      print("prevFetched : $prevFetchedItems");
       final bool isLastPage = prevFetchedItems + pageSize > totalPaginateCount;
       if (isLastPage) {
-        print("LAST PAGE!");
         _pagingController.appendLastPage(newPage);
       } else {
         _pagingController.appendPage(newPage, pageKey + 1);
